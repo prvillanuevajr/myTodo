@@ -1,6 +1,8 @@
 package com.presmelito.mytodo.model;
 
 public class User {
+
+    private long id;
     private String firstName;
     private String lastName;
     private String userName;
@@ -43,5 +45,13 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 }
