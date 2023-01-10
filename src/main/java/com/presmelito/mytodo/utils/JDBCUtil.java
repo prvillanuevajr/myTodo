@@ -8,8 +8,8 @@ import java.time.LocalDate;
 
 public class JDBCUtil {
     private static final String url = "jdbc:mysql://localhost:3306/myTodoServlet";
-    private static String password = "presmelito";
-    private static String userName = "password";
+    private static String password = "password";
+    private static String userName = "presmelito";
 
     public static Connection getConnection(){
         Connection connection = null;
