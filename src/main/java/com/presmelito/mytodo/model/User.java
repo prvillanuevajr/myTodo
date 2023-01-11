@@ -1,5 +1,7 @@
 package com.presmelito.mytodo.model;
 
+import com.presmelito.mytodo.dao.UserDao;
+
 public class User {
 
     private long id;
@@ -53,5 +55,12 @@ public class User {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public boolean registerUser(){
+        if (!new UserDao().doesUserExist(this.userName)){
+            return new UserDao().persist(this) == 1;
+        }
+        return false;
     }
 }

@@ -10,7 +10,7 @@ import java.sql.SQLException;
 
 public class UserDao {
 
-    public int registerUser(User user) {
+    public int persist(User user) {
         try (
                 Connection connection = JDBCUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement("INSERT INTO users (firstName,lastName,username,password) values (?,?,?,?)");
@@ -21,6 +21,18 @@ public class UserDao {
             statement.setString(4, DigestUtils.sha256Hex(user.getPassword()));
             return statement.executeUpdate();
 
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public boolean doesUserExist(String userName) {
+        try (
+                Connection connection = JDBCUtil.getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement("SELECT userName from users where userName = ?");
+        ) {
+            preparedStatement.setString(1, userName);
+            return preparedStatement.executeQuery().next();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
