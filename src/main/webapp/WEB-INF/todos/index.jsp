@@ -47,11 +47,17 @@
             <td>${todo.description}</td>
             <td>${todo.targetDate}</td>
             <td>${todo.completedAt}</td>
-            <td></td>
+            <td>
+              <form action="<%=request.getContextPath()%>/todos/delete" method="post" style="display: none" class="deleteForm">
+                <input type="hidden" name="todoId" value="${todo.id}">
+              </form>
+              <button class="btn btn-danger" onclick="this.parentElement.querySelector('.deleteForm').submit()">Delete</button>
+            </td>
           </tr>
         </c:forEach>
         </tbody>
       </table>
+
     </div>
   </div>
 </div>

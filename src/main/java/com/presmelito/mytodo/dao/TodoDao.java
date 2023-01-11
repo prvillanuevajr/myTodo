@@ -51,4 +51,16 @@ public class TodoDao {
         }
         return null;
     }
+
+    public boolean delete(long todoId) {
+        try (
+                Connection connection = JDBCUtil.getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM todos where id = ?");
+        ) {
+            preparedStatement.setLong(1,todoId);
+            return preparedStatement.executeUpdate() == 1;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
