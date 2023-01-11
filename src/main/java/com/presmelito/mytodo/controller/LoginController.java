@@ -1,6 +1,7 @@
 package com.presmelito.mytodo.controller;
 
 import com.presmelito.mytodo.model.Login;
+import com.presmelito.mytodo.model.User;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -20,13 +21,15 @@ public class LoginController extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        boolean isValid = new Login(
+        Login login = new Login(
                 req.getParameter("userName"),
                 req.getParameter("password")
-        ).validate();
+        );
+        boolean isValid = login.validate();
 
         if (isValid){
-            resp.getWriter().println("OK!");
+            req.getSession().setAttribute("user",login.getUser());
+            resp.sendRedirect(req.getContextPath()+"/todos");
         }else {
             resp.getWriter().println("BAD LOGIN!");
         }
