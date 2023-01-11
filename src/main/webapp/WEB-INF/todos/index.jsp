@@ -6,6 +6,8 @@
   Time: 10:51 am
   To change this template use File | Settings | File Templates.
 --%>
+<%@ page import="com.presmelito.mytodo.utils.DateUtil" %>
+
 <jsp:include page="../../includes/header.jsp"/>
 <jsp:include page="../../includes/authNav.jsp"/>
 <div class="container">
@@ -45,13 +47,19 @@
           <tr>
             <td>${todo.title}</td>
             <td>${todo.description}</td>
-            <td>${todo.targetDate}</td>
+            <td>${DateUtil.toHuman(todo.targetDate)}</td>
             <td>${todo.completedAt}</td>
             <td>
               <form action="<%=request.getContextPath()%>/todos/delete" method="post" style="display: none" class="deleteForm">
                 <input type="hidden" name="todoId" value="${todo.id}">
               </form>
-              <button class="btn btn-danger" onclick="this.parentElement.querySelector('.deleteForm').submit()">Delete</button>
+              <button class="btn btn-danger btn-sm" onclick="this.parentElement.querySelector('.deleteForm').submit()">Delete</button>
+              <form action="<%=request.getContextPath()%>/todos/complete" method="post" style="display: none" class="markAsCompleteForm">
+                <input type="hidden" name="todoId" value="${todo.id}">
+              </form>
+              <c:if test="${todo.completedAt == null}">
+                <button class="btn btn-success btn-sm" onclick="this.parentElement.querySelector('.markAsCompleteForm').submit()">Complete</button>
+              </c:if>
             </td>
           </tr>
         </c:forEach>

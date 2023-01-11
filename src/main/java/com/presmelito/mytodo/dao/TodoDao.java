@@ -5,6 +5,7 @@ import com.presmelito.mytodo.model.User;
 import com.presmelito.mytodo.utils.JDBCUtil;
 
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,7 +58,20 @@ public class TodoDao {
                 Connection connection = JDBCUtil.getConnection();
                 PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM todos where id = ?");
         ) {
-            preparedStatement.setLong(1,todoId);
+            preparedStatement.setLong(1, todoId);
+            return preparedStatement.executeUpdate() == 1;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public boolean markAsComplete(long todoId) {
+        try (
+                Connection connection = JDBCUtil.getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement("UPDATE todos set completedAt = ? where id = ?")
+        ) {
+            preparedStatement.setTimestamp(1, Timestamp.valueOf(LocalDateTime.now()));
+            preparedStatement.setLong(2, todoId);
             return preparedStatement.executeUpdate() == 1;
         } catch (SQLException e) {
             throw new RuntimeException(e);
