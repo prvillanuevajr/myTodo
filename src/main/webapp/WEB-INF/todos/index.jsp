@@ -11,7 +11,21 @@
 <div class="container">
   <div class="row">
     <div class="col">
-      <button class="btn btn-primary">Add Todo</button>
+      <form action="<%=request.getContextPath()%>/todos" method="post">
+        <div class="form-group">
+          <label for="title">Title:</label>
+          <input type="text" class="form-control" id="title" placeholder="Title" name="title" required>
+        </div>
+        <div class="form-group">
+          <label for="description">Description:</label>
+          <input type="text" class="form-control" id="description" placeholder="Description" name="description" required>
+        </div>
+        <div class="form-group">
+          <label for="targetDate">Description:</label>
+          <input type="datetime-local" class="form-control" id="targetDate" placeholder="Description" name="targetDate" required>
+        </div>
+        <button class="btn btn-success">save</button>
+      </form>
     </div>
   </div>
   <div class="row">

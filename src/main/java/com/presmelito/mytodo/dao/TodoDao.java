@@ -12,15 +12,14 @@ public class TodoDao {
     public boolean persist(Todo todo) {
         try (
                 Connection connection = JDBCUtil.getConnection();
-                PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO todos (title,description,targetDate,userId,completed) values (?,?,?,?,?)")
+                PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO todos (title,description,targetDate,userId) values (?,?,?,?)")
         ) {
             preparedStatement.setString(1, todo.getTitle());
             preparedStatement.setString(2, todo.getDescription());
             preparedStatement.setTimestamp(3, Timestamp.valueOf(todo.getTargetDate()));
             preparedStatement.setLong(4, todo.getUser().getId());
-            preparedStatement.setTimestamp(5, Timestamp.valueOf(todo.getCompletedAt()));
 
-            return preparedStatement.executeQuery().next();
+            return preparedStatement.executeUpdate() == 1;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -42,7 +41,7 @@ public class TodoDao {
                             user,
                             resultSet.getString("description"),
                             resultSet.getTimestamp("targetDate").toLocalDateTime(),
-                            resultSet.getTimestamp("completedAt").toLocalDateTime()
+                            resultSet.getTimestamp("completedAt") == null ? null : resultSet.getTimestamp("completedAt").toLocalDateTime()
                     ));
                 }
                 return todos;

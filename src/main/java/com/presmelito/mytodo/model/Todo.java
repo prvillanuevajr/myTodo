@@ -1,5 +1,7 @@
 package com.presmelito.mytodo.model;
 
+import com.presmelito.mytodo.dao.TodoDao;
+
 import java.time.LocalDateTime;
 
 public class Todo {
@@ -76,5 +78,9 @@ public class Todo {
 
     public void setCompletedAt(LocalDateTime completedAt) {
         this.completedAt = completedAt;
+    }
+
+    public boolean save() {
+        return new TodoDao().persist(this);
     }
 }
