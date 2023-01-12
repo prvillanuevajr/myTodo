@@ -1,8 +1,14 @@
 package com.presmelito.mytodo.dao;
 
 import com.presmelito.mytodo.model.User;
+import com.presmelito.mytodo.utils.HibConfiguration;
 import com.presmelito.mytodo.utils.JDBCUtil;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -11,30 +17,25 @@ import java.sql.SQLException;
 public class UserDao {
 
     public int persist(User user) {
-        try (
-                Connection connection = JDBCUtil.getConnection();
-                PreparedStatement statement = connection.prepareStatement("INSERT INTO users (firstName,lastName,username,password) values (?,?,?,?)");
-        ) {
-            statement.setString(1, user.getFirstName());
-            statement.setString(2, user.getLastName());
-            statement.setString(3, user.getUserName());
-            statement.setString(4, DigestUtils.sha256Hex(user.getPassword()));
-            return statement.executeUpdate();
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+        try (Session session = HibConfiguration.getSessionFactory().openSession()) {
+            user.setPassword(DigestUtils.sha256Hex(user.getPassword()));
+            session.beginTransaction();
+            session.persist(user);
+            session.getTransaction().commit();
+            session.close();
+            return 1;
         }
     }
 
     public boolean doesUserExist(String userName) {
-        try (
-                Connection connection = JDBCUtil.getConnection();
-                PreparedStatement preparedStatement = connection.prepareStatement("SELECT userName from users where userName = ?");
-        ) {
-            preparedStatement.setString(1, userName);
-            return preparedStatement.executeQuery().next();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+        try (Session session = HibConfiguration.getSessionFactory().openSession()) {
+            CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+            CriteriaQuery<User> criteriaQuery = criteriaBuilder.createQuery(User.class);
+            Root<User> root = criteriaQuery.from(User.class);
+            criteriaQuery = criteriaQuery.select(root).where(criteriaBuilder.equal(root.get("userName"), userName));
+            boolean exist = !session.createQuery(criteriaQuery).getResultList().isEmpty();
+            session.close();
+            return exist;
         }
     }
 }
