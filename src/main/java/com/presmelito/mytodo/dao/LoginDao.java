@@ -3,17 +3,11 @@ package com.presmelito.mytodo.dao;
 import com.presmelito.mytodo.model.Login;
 import com.presmelito.mytodo.model.User;
 import com.presmelito.mytodo.utils.HibConfiguration;
-import com.presmelito.mytodo.utils.JDBCUtil;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Root;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.hibernate.Session;
-
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
 public class LoginDao {
 
