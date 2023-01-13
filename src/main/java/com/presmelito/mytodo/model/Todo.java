@@ -1,12 +1,19 @@
 package com.presmelito.mytodo.model;
 
 import com.presmelito.mytodo.dao.TodoDao;
+import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 
+@Entity
+@Table(name = "todos")
 public class Todo {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String title;
+    @ManyToOne()
+    @JoinColumn(name = "userId")
     private User user;
     private String description;
     private LocalDateTime targetDate;

@@ -1,7 +1,7 @@
 package com.presmelito.mytodo.utils;
 
+import com.presmelito.mytodo.model.Todo;
 import com.presmelito.mytodo.model.User;
-import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
@@ -11,6 +11,7 @@ public final class HibConfiguration {
 
     static {
         configuration.addAnnotatedClass(User.class);
+        configuration.addAnnotatedClass(Todo.class);
         sessionFactory = configuration.buildSessionFactory();
     }
     public static SessionFactory getSessionFactory(){
